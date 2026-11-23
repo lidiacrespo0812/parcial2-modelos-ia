@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hub de Modelos Inteligentes | Lidia Crespo</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-soft: #273549;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+      --border: #334155;
+      --ok: #34d399;
+      --err: #f87171;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--bg), #111827);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    .encabezado {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 5px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .autor {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .autor strong {
+      color: var(--text);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      background: var(--card);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .tab-btn.activa {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #09111e;
+      border-color: transparent;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 21px;
+    }
+
+    .modos {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .modo-btn {
+      padding: 9px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-soft);
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .modo-btn.activa {
+      background: var(--accent);
+      color: #09111e;
+      border-color: transparent;
+    }
+
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: var(--card-soft);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      color: var(--text);
+    }
+
+    video {
+      width: 100%;
+      max-height: 320px;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-soft);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .btn-accion {
+      margin-top: 18px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #09111e;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+
+    .vista-previa {
+      display: block;
+      max-width: 100%;
+      max-height: 290px;
+      margin-top: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .resultado {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--card-soft);
+      border-left: 4px solid var(--ok);
+      font-size: 17px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .resultado.error {
+      border-left-color: var(--err);
+      color: var(--err);
+    }
+
+    .nota {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .oculto { display: none; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="encabezado">
+      <span class="badge">Sistemas Inteligentes Aplicados a la Educación</span>
+      <h1>Clasificador de Imágenes y Adaptabilidad Estudiantil</h1>
+      <p class="autor">Desarrollado por <strong>Lidia Crespo</strong> · Conectado a Flask + ngrok</p>
+    </header>
+
+    <div class="tabs">
+      <button id="boton-perros" class="tab-btn activa" onclick="mostrarPanel('perros')">🐶🐱 Perros y Gatos</button>
+      <button id="boton-estudiante" class="tab-btn" onclick="mostrarPanel('estudiante')">🎓 Adaptabilidad Estudiantil</button>
+    </div>
+
+    <section id="panel-perros" class="panel">
+      <h2>Clasificador Visual: ¿Perro o Gato?</h2>
+
+      <div class="modos">
+        <button id="boton-subir" class="modo-btn activa" onclick="elegirModo('subir')">Subir imagen</button>
+        <button id="boton-camara" class="modo-btn" onclick="elegirModo('camara')">Usar cámara</button>
+      </div>
+
+      <div id="bloque-subir">
+        <input type="file" id="foto" accept="image/*" onchange="analizarFoto()">
+      </div>
+
+      <div id="bloque-camara" class="oculto">
+        <video id="video" autoplay playsinline muted></video>
+        <div>
+          <button class="btn-accion" onclick="encenderCamara()">Activar cámara</button>
+          <button class="btn-accion" onclick="tomarFoto()">Capturar y analizar</button>
+        </div>
+        <p class="nota">Funciona en conexiones seguras (HTTPS) o desde tu equipo local con permisos de cámara habilitados.</p>
+      </div>
+
+      <img id="vista-previa" class="vista-previa oculto" alt="Vista previa de la imagen">
+      <div id="resultado-perros" class="resultado oculto"></div>
+    </section>
+
+    <section id="panel-estudiante" class="panel oculto">
+      <h2>Predicción de Adaptabilidad del Estudiante</h2>
+
+      <div class="grid-form">
+        <div class="campo">
+          <label>Género
+            <select id="Gender">
+              <option value="Boy">Niño / Hombre</option>
+              <option value="Girl">Niña / Mujer</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Rango de edad
+            <select id="Age">
+              <option value="1-5">1 a 5 años</option>
+              <option value="6-10">6 a 10 años</option>
+              <option value="11-15">11 a 15 años</option>
+              <option value="16-20">16 a 20 años</option>
+              <option value="21-25">21 a 25 años</option>
+              <option value="26-30">26 a 30 años</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Nivel educativo
+            <select id="Education Level">
+              <option value="School">Escuela</option>
+              <option value="College">Colegio</option>
+              <option value="University">Universidad</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Tipo de institución
+            <select id="Institution Type">
+              <option value="Government">Pública</option>
+              <option value="Non Government">Privada</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Estudia informática
+            <select id="IT Student">
+              <option value="Yes">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Vive en la ciudad
+            <select id="Location">
+              <option value="Yes">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Cortes de electricidad
+            <select id="Load-shedding">
+              <option value="Low">Pocos</option>
+              <option value="High">Muchos</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Situación económica
+            <select id="Financial Condition">
+              <option value="Poor">Baja</option>
+              <option value="Mid">Media</option>
+              <option value="Rich">Alta</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Tipo de internet
+            <select id="Internet Type">
+              <option value="Wifi">Wi-Fi</option>
+              <option value="Mobile Data">Datos móviles</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Tipo de red
+            <select id="Network Type">
+              <option value="2G">2G</option>
+              <option value="3G">3G</option>
+              <option value="4G">4G</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Horas de clase al día
+            <select id="Class Duration">
+              <option value="0">Ninguna</option>
+              <option value="1-3">1 a 3 horas</option>
+              <option value="3-6">3 a 6 horas</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Plataforma virtual (LMS) en la institución
+            <select id="Self Lms">
+              <option value="Yes">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="campo">
+          <label>Dispositivo principal
+            <select id="Device">
+              <option value="Computer">Computadora</option>
+              <option value="Tab">Tableta</option>
+              <option value="Mobile">Celular</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn-accion" onclick="evaluarEstudiante()">Evaluar adaptabilidad</button>
+      <div id="resultado-estudiante" class="resultado oculto"></div>
+    </section>
+  </div>
+
+  <script>
+    const SERVIDOR = "https://74b2-34-73-124-235.ngrok-free.app";
+    const ENCABEZADO_NGROK = { "ngrok-skip-browser-warning": "true" };
+
+    function mostrarPanel(nombre) {
+      document.getElementById("panel-perros").classList.add("oculto");
+      document.getElementById("panel-estudiante").classList.add("oculto");
+      document.getElementById("boton-perros").classList.remove("activa");
+      document.getElementById("boton-estudiante").classList.remove("activa");
+
+      document.getElementById("panel-" + nombre).classList.remove("oculto");
+      document.getElementById("boton-" + nombre).classList.add("activa");
+      apagarCamara();
+    }
+
+    function elegirModo(modo) {
+      document.getElementById("bloque-subir").classList.add("oculto");
+      document.getElementById("bloque-camara").classList.add("oculto");
+      document.getElementById("boton-subir").classList.remove("activa");
+      document.getElementById("boton-camara").classList.remove("activa");
+
+      document.getElementById("bloque-" + modo).classList.remove("oculto");
+      document.getElementById("boton-" + modo).classList.add("activa");
+
+      if (modo === "subir") apagarCamara();
+    }
+
+    function analizarFoto() {
+      const archivo = document.getElementById("foto").files[0];
+      if (!archivo) return;
+      enviarImagen(archivo);
+    }
+
+    let flujoCamara = null;
+
+    async function encenderCamara() {
+      const caja = document.getElementById("resultado-perros");
+      try {
+        flujoCamara = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        document.getElementById("video").srcObject = flujoCamara;
+      } catch (error) {
+        caja.classList.remove("oculto");
+        caja.classList.add("error");
+        caja.textContent = "No se pudo abrir la cámara. Revisa los permisos o usa Subir imagen.";
+      }
+    }
+
+    function apagarCamara() {
+      if (flujoCamara) {
+        flujoCamara.getTracks().forEach(pista => pista.stop());
+        flujoCamara = null;
+      }
+      document.getElementById("video").srcObject = null;
+    }
+
+    function tomarFoto() {
+      const video = document.getElementById("video");
+      if (!flujoCamara) return;
+      const lienzo = document.createElement("canvas");
+      lienzo.width = video.videoWidth;
+      lienzo.height = video.videoHeight;
+      lienzo.getContext("2d").drawImage(video, 0, 0);
+      lienzo.toBlob(imagen => enviarImagen(imagen), "image/jpeg", 0.9);
+    }
+
+    async function enviarImagen(imagen) {
+      const caja = document.getElementById("resultado-perros");
+      const vistaPrevia = document.getElementById("vista-previa");
+
+      vistaPrevia.src = URL.createObjectURL(imagen);
+      vistaPrevia.classList.remove("oculto");
+      caja.classList.remove("oculto", "error");
+      caja.textContent = "Analizando imagen con el modelo...";
+
+      const paquete = new FormData();
+      paquete.append("imagen", imagen, "foto.jpg");
+
+      try {
+        const respuesta = await fetch(SERVIDOR + "/api/perros-gatos", {
+          method: "POST",
+          body: paquete,
+          headers: ENCABEZADO_NGROK
+        });
+        const datos = await respuesta.json();
+        const animal = datos.etiqueta === "perro" ? "🐶 Perro" : "🐱 Gato";
+        const porcentaje = (datos.confianza * 100).toFixed(1);
+        caja.textContent = `Predicción: ${animal} (${porcentaje}% de confianza)`;
+      } catch (error) {
+        caja.classList.add("error");
+        caja.textContent = "No se pudo conectar con el servidor. Verifica que Colab esté activo y el enlace de ngrok actualizado.";
+      }
+    }
+
+    const PREGUNTAS = [
+      "Gender", "Age", "Education Level", "Institution Type",
+      "IT Student", "Location", "Load-shedding", "Financial Condition",
+      "Internet Type", "Network Type", "Class Duration", "Self Lms", "Device"
+    ];
+
+    const NIVELES = { "High": "Alta", "Moderate": "Moderada", "Low": "Baja" };
+
+    async function evaluarEstudiante() {
+      const caja = document.getElementById("resultado-estudiante");
+      caja.classList.remove("oculto", "error");
+      caja.textContent = "Evaluando perfil del estudiante...";
+
+      const respuestas = {};
+      for (const pregunta of PREGUNTAS) {
+        respuestas[pregunta] = document.getElementById(pregunta).value;
+      }
+
+      try {
+        const respuesta = await fetch(SERVIDOR + "/api/adaptabilidad", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...ENCABEZADO_NGROK },
+          body: JSON.stringify(respuestas)
+        });
+        const datos = await respuesta.json();
+
+        let texto = `Nivel de adaptabilidad: ${NIVELES[datos.nivel]}`;
+        for (const p of datos.probabilidades) {
+          texto += `\n• ${NIVELES[p.nivel]}: ${(p.prob * 100).toFixed(1)}%`;
+        }
+        caja.textContent = texto;
+      } catch (error) {
+        caja.classList.add("error");
+        caja.textContent = "No se pudo conectar con el servidor. Verifica que Colab esté activo y el enlace de ngrok actualizado.";
+      }
+    }
+  </script>
+</body>
+</html>
